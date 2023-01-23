@@ -1,8 +1,7 @@
 from pathlib import Path
-from pydantic.dataclasses import dataclass
+import re
 import json
-from typing import TypedDict, Annotated, List, Dict, Any, Type, _TypedDictMeta
-from pydantic import create_model, BaseModel as PydanticBaseModel, Field
+from pydantic import create_model, BaseModel, Field, Extra
 
 SCHEMA_DIR = Path("src/schemas")
 
@@ -20,75 +19,58 @@ stream_datum_dict = json.load(Path(SCHEMA_DIR / "stream_datum.json").open())
 stream_resource_dict = json.load(Path(SCHEMA_DIR / "stream_resource.json").open())
 
 
-def desc(description: str):
-    return Field(description=description)
+from typing import Type, _TypedDictMeta
 
 
-def title(title: str):
-    return Field(title=title)
+def snake_case(string: str) -> str:
+    return "_".join(
+        re.sub(
+            "([A-Z][a-z]+)",
+            r" \1",
+            re.sub("([A-Z]+)", r" \1", string.replace("-", " ")),
+        ).split()
+    ).lower()
 
 
-def additionalProperties(additional_properties: bool):
-    return Field(additional_properties=additional_properties)
-
-
-class BulkDatum(TypedDict):
-    # The docstring functions as the description field.
-    """Document to reference a quanta of externally-stored data"""
-
-    datum_kwarg_list: Annotated[
-        List[object],
-        desc(
-            "Array of arguments to pass to the Handler to retrieve one quanta of data"
-        ),
-    ]
-
-    resource: Annotated[
-        str,
-        desc("UID of the Resource to which all these Datum documents belong"),
-    ]
-
-    datum_ids: Annotated[
-        List[str],
-        desc(
-            "Globally unique identifiers for each Datum (akin to 'uid' for other Document types), typically formatted as '<resource>/<integer>'"
-        ),
-    ]
-
-
-class Config:
-    additional_properties = False
+class Config(BaseModel.Config):
+    extra = Extra.forbid
+    alias_generator = snake_case
 
 
 # From https://github.com/pydantic/pydantic/issues/760#issuecomment-589708485
-def parse_dict(typed_dict: _TypedDictMeta) -> Type[PydanticBaseModel]:
+def parse_dict(typed_dict: _TypedDictMeta) -> Type[BaseModel]:
     annotations = {}
+
     for name, field in typed_dict.__annotations__.items():
+        print("")
+        print(name)
+        print(field)
+        print("")
         if isinstance(field, _TypedDictMeta):
             annotations[name] = (parse_dict(field), ...)
         else:
             default_value = getattr(typed_dict, name, ...)
             annotations[name] = (field, default_value)
 
-    model = create_model(typed_dict.__name__, **annotations)
+    model = create_model(typed_dict.__name__, **annotations, __config__=Config)
 
-    @dataclass(config=Config)
-    class ModelClass(model):
-        ...
+    # Docstring is used as the description field.
+    model.__doc__ = typed_dict.__doc__
 
-    return ModelClass
+    # title goes to camelcase
+    model.__name__ = snake_case(typed_dict.__name__)
+    return model
 
 
-def export_json_schema(
-    typed_dict: _TypedDictMeta, path: Path = Path("gen_bulk_datum.json")
-):
+def export_json_schema(typed_dict: _TypedDictMeta, out_root: Path = Path("out")):
     model = parse_dict(typed_dict)
 
     # Use the docstring of the TypedDict as the json schema description.
-    model.__doc__ = typed_dict.__doc__
 
-    with open(path, "w+") as f:
-        json.dump(model.schema(), f, indent=3)
+    with open(out_root / f"{model.__name__}.json", "w+") as f:
+        json.dump(model.schema(by_alias=True), f, indent=3)
 
+
+from type_dict_definitions import BulkDatum
 
 export_json_schema(BulkDatum)
