@@ -69,8 +69,3 @@ def export_json_schema(typed_dict: _TypedDictMeta, out_root: Path = Path("out"))
 
     with open(out_root / f"{model.__name__}.json", "w+") as f:
         json.dump(model.schema(by_alias=True), f, indent=3)
-
-
-from type_dict_definitions import BulkDatum
-
-export_json_schema(BulkDatum)
