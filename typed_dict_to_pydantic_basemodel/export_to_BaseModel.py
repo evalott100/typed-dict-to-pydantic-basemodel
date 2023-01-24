@@ -2,23 +2,6 @@ from pathlib import Path
 import re
 import json
 from pydantic import create_model, BaseModel, Field, Extra
-
-SCHEMA_DIR = Path("src/schemas")
-
-bulk_datum_dict = json.load(Path(SCHEMA_DIR / "bulk_datum.json").open())
-bulk_events_dict = json.load(Path(SCHEMA_DIR / "bulk_events.json").open())
-datum_page_dict = json.load(Path(SCHEMA_DIR / "datum_page.json").open())
-datum_dict = json.load(Path(SCHEMA_DIR / "datum.json").open())
-event_descriptor_dict = json.load(Path(SCHEMA_DIR / "event_descriptor.json").open())
-event_dict = json.load(Path(SCHEMA_DIR / "event.json").open())
-event_page_dict = json.load(Path(SCHEMA_DIR / "event_page.json").open())
-resource_dict = json.load(Path(SCHEMA_DIR / "resource.json").open())
-run_start_dict = json.load(Path(SCHEMA_DIR / "run_start.json").open())
-run_stop_dict = json.load(Path(SCHEMA_DIR / "run_stop.json").open())
-stream_datum_dict = json.load(Path(SCHEMA_DIR / "stream_datum.json").open())
-stream_resource_dict = json.load(Path(SCHEMA_DIR / "stream_resource.json").open())
-
-
 from typing import Type, _TypedDictMeta
 
 
@@ -32,20 +15,23 @@ def snake_case(string: str) -> str:
     ).lower()
 
 
+
 class Config(BaseModel.Config):
     extra = Extra.forbid
     alias_generator = snake_case
+    allow_population_by_field_name = True
 
 
 # From https://github.com/pydantic/pydantic/issues/760#issuecomment-589708485
 def parse_dict(typed_dict: _TypedDictMeta) -> Type[BaseModel]:
     annotations = {}
 
+    print(typed_dict)
     for name, field in typed_dict.__annotations__.items():
-        print("")
+        print("\nname")
         print(name)
+        print("\nfield")
         print(field)
-        print("")
         if isinstance(field, _TypedDictMeta):
             annotations[name] = (parse_dict(field), ...)
         else:

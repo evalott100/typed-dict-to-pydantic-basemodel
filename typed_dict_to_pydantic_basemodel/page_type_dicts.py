@@ -1,5 +1,5 @@
-from typing import TypedDict, Annotated, List, Any, Optional
-from pydantic import Field
+from typing import TypedDict, Annotated, List, Any, Optional, Type
+from pydantic import Field, PyObject
 
 
 def desc(description: str):
@@ -37,20 +37,23 @@ class BulkDatum(TypedDict):
 class BulkEvents(TypedDict):
     # The docstring functions as the description field.
     """Document to record a quanta of collected data"""
-
-    data: Annotated[Any, desc("The actual measument data")]
-    timestamps: Annotated[Any, desc("The timestamps of the individual measument data")]
-    filled: Optional[
-        Annotated[
-            Any,
-            desc(
-                "Mapping the keys of externally-stored data to a boolean indicating whether that data has yet been loaded"
-            ),
-        ]
+    filled: Annotated[
+        Optional[Type[object]],
+        desc(
+            "Mapping the keys of externally-stored data to a boolean indicating whether that data has yet been loaded"
+        ),
     ]
+
+    data: Annotated[Type[object], desc("The actual measument data")]
+
+    timestamps: Annotated[
+        Type[object], desc("The timestamps of the individual measument data")
+    ]
+
     descriptor: Annotated[
         str, desc("UID to point back to Descriptor for this event stream")
     ]
+
     seq_num: Annotated[
         int,
         desc(
