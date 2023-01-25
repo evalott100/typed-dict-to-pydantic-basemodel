@@ -26,12 +26,7 @@ class Config(BaseModel.Config):
 def parse_dict(typed_dict: _TypedDictMeta) -> Type[BaseModel]:
     annotations = {}
 
-    print(typed_dict)
     for name, field in typed_dict.__annotations__.items():
-        print("\nname")
-        print(name)
-        print("\nfield")
-        print(field)
         if isinstance(field, _TypedDictMeta):
             annotations[name] = (parse_dict(field), ...)
         else:
@@ -48,15 +43,15 @@ def parse_dict(typed_dict: _TypedDictMeta) -> Type[BaseModel]:
     return model
 
 
-SCHEMA_OUT_DIR = Path("typed_dict_to_pydantic_basemodel/schemas/generated_json_schema")
-
-
 def export_typedict_to_json_schema(
-    typed_dict: _TypedDictMeta, out_dir: Path = SCHEMA_OUT_DIR
+    typed_dict: _TypedDictMeta, out_dir: Path | None = None
 ):
     model = parse_dict(typed_dict)
 
     # Use the docstring of the TypedDict as the json schema description.
 
-    with open(out_dir / f"{model.__name__}.json", "w+") as f:
-        json.dump(model.schema(by_alias=True), f, indent=3)
+    if out_dir:
+        with open(out_dir / f"{model.__name__}.json", "w+") as f:
+            json.dump(model.schema(by_alias=True), f, indent=3)
+
+    return dict(model.schema(by_alias=True))

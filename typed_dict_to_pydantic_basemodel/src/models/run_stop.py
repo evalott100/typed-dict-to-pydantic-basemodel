@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Annotated
 
 from pydantic import BaseModel, Extra, Field
 
@@ -10,24 +10,30 @@ class ExitStatus(Enum):
     fail = "fail"
 
 
-class Model(BaseModel):
+class RunStop(BaseModel):
+    """Document for the end of a run indicating the success/fail state of the run and the end time"""
+
     class Config:
         extra = Extra.forbid
 
-    run_start: str = Field(
-        ...,
-        description="Reference back to the run_start document that this document is paired with.",
-    )
-    reason: Optional[str] = Field(
-        None, description="Long-form description of why the run ended"
-    )
-    time: float = Field(..., description="The time the run ended. Unix epoch")
-    exit_status: ExitStatus = Field(..., description="State of the run when it ended")
-    uid: str = Field(..., description="Globally unique ID for this document")
-    num_events: Optional[Dict[str, int]] = Field(
-        None, description="Number of Events per named stream"
-    )
+    run_start: Annotated[
+        str,
+        Field(
+            description="Reference back to the run_start document that this document is paired with.",
+        ),
+    ]
+    reason: Annotated[
+        Optional[str], Field(description="Long-form description of why the run ended")
+    ]
+    time: Annotated[float, Field(description="The time the run ended. Unix epoch")]
+    exit_status: Annotated[
+        ExitStatus, Field(description="State of the run when it ended")
+    ]
+    uid: Annotated[str, Field(description="Globally unique ID for this document")]
+    num_events: Annotated[
+        Optional[Dict[str, int]], Field(description="Number of Events per named stream")
+    ]
 
 
 class DataType(BaseModel):
-    __root__: Any = Field(..., title="data_type")
+    __root__: Annotated[Any, Field(title="data_type")]

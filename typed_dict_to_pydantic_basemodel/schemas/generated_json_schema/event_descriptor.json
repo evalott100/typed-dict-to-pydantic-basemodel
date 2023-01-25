@@ -1,24 +1,29 @@
 {
    "title": "event_descriptor",
+   "description": "Document to describe the data captured in the associated event documents",
    "type": "object",
    "properties": {
       "data_keys": {
-         "title": "Data Keys",
+         "title": "data_keys",
+         "description": "This describes the data in the Event Documents.",
          "type": "object",
          "additionalProperties": {
             "$ref": "#/definitions/DataKey"
          }
       },
       "uid": {
-         "title": "Uid",
+         "title": "uid",
+         "description": "Globally unique ID for this event descriptor.",
          "type": "string"
       },
       "run_start": {
          "title": "Run Start",
+         "description": "Globally unique ID of this run's 'start' document.",
          "type": "string"
       },
       "time": {
          "title": "Time",
+         "description": "Creation time of the document as unix epoch time.",
          "type": "number"
       },
       "hints": {
@@ -26,14 +31,17 @@
       },
       "object_keys": {
          "title": "Object Keys",
+         "description": "Maps a Device/Signal name to the names of the entries it produces in data_keys.",
          "type": "object"
       },
       "name": {
          "title": "Name",
+         "description": "A human-friendly name for this data stream, such as 'primary' or 'baseline'.",
          "type": "string"
       },
       "configuration": {
          "title": "Configuration",
+         "description": "Readings of configurational fields necessary for interpreting data in the Events.",
          "type": "object",
          "additionalProperties": {
             "$ref": "#/definitions/Configuration"
@@ -45,10 +53,7 @@
       "uid",
       "run_start",
       "time",
-      "hints",
-      "object_keys",
-      "name",
-      "configuration"
+      "hints"
    ],
    "additionalProperties": false,
    "definitions": {
