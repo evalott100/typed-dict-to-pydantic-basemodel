@@ -15,7 +15,7 @@ def snake_case(string: str) -> str:
     ).lower()
 
 
-
+# Config for generated BaseModel
 class Config(BaseModel.Config):
     extra = Extra.forbid
     alias_generator = snake_case
@@ -48,10 +48,15 @@ def parse_dict(typed_dict: _TypedDictMeta) -> Type[BaseModel]:
     return model
 
 
-def export_json_schema(typed_dict: _TypedDictMeta, out_root: Path = Path("out")):
+SCHEMA_OUT_DIR = Path("typed_dict_to_pydantic_basemodel/schemas/generated_json_schema")
+
+
+def export_typedict_to_json_schema(
+    typed_dict: _TypedDictMeta, out_dir: Path = SCHEMA_OUT_DIR
+):
     model = parse_dict(typed_dict)
 
     # Use the docstring of the TypedDict as the json schema description.
 
-    with open(out_root / f"{model.__name__}.json", "w+") as f:
+    with open(out_dir / f"{model.__name__}.json", "w+") as f:
         json.dump(model.schema(by_alias=True), f, indent=3)
