@@ -1,52 +1,55 @@
 {
+   "title": "stream_resource",
+   "description": "Document to reference a collection (e.g. file or group of files) of externally-stored data streams",
    "type": "object",
    "properties": {
       "spec": {
-         "type": "string",
-         "description": "String identifying the format/type of this Stream Resource, used to identify a compatible Handler"
+         "title": "Spec",
+         "description": "String identifying the format/type of this Stream Resource, used to identify a compatible Handler",
+         "type": "string"
       },
       "resource_path": {
-         "type": "string",
-         "description": "Filepath or URI for locating this resource"
+         "title": "Resource Path",
+         "description": "Filepath or URI for locating this resource",
+         "type": "string"
       },
       "resource_kwargs": {
-         "type": "object",
-         "description": "Additional argument to pass to the Handler to read a Stream Resource"
+         "title": "Resource Kwargs",
+         "description": "Additional argument to pass to the Handler to read a Stream Resource",
+         "type": "object"
       },
       "root": {
-         "type": "string",
-         "description": "Subset of resource_path that is a local detail, not semantic."
+         "title": "Root",
+         "description": "Subset of resource_path that is a local detail, not semantic.",
+         "type": "string"
       },
       "path_semantics": {
-         "type": [
-            "string",
-            "null"
-         ],
-         "enum": [
-            "posix",
-            "windows"
-         ],
-         "description": "Rules for joining paths"
+         "description": "Rules for joining paths",
+         "allOf": [
+            {
+               "$ref": "#/definitions/PathSemantics"
+            }
+         ]
       },
       "uid": {
-         "type": "string",
-         "description": "Globally unique identifier for this Stream Resource"
+         "title": "Uid",
+         "description": "Globally unique identifier for this Stream Resource",
+         "type": "string"
       },
       "run_start": {
-         "type": [
-            "string",
-            "null"
-         ],
-         "description": "Globally unique ID to the run_start document this Stream Resource is associated with."
+         "title": "Run Start",
+         "description": "Globally unique ID to the run_start document this Stream Resource is associated with.",
+         "type": "string"
       },
       "stream_names": {
+         "title": "Stream Names",
+         "description": "List of the stream names this resource provides",
+         "minItems": 1,
+         "uniqueItems": true,
          "type": "array",
          "items": {
             "type": "string"
-         },
-         "minItems": 1,
-         "uniqueItems": true,
-         "description": "List of the stream names this resource provides"
+         }
       }
    },
    "required": [
@@ -54,13 +57,18 @@
       "resource_path",
       "resource_kwargs",
       "root",
-      "path_semantics",
       "uid",
-      "run_start",
       "stream_names"
    ],
    "additionalProperties": false,
-   "$schema": "http://json-schema.org/draft/2020-12/schema#",
-   "description": "Document to reference a collection (e.g. file or group of files) of externally-stored data streams",
-   "title": "stream_resource"
+   "definitions": {
+      "PathSemantics": {
+         "title": "PathSemantics",
+         "description": "An enumeration.",
+         "enum": [
+            "posix",
+            "windows"
+         ]
+      }
+   }
 }

@@ -1,43 +1,45 @@
 {
+   "title": "resource",
+   "description": "Document to reference a collection (e.g. file or group of files) of externally-stored data",
    "type": "object",
    "properties": {
       "spec": {
-         "type": "string",
-         "description": "String identifying the format/type of this Resource, used to identify a compatible Handler"
+         "title": "Spec",
+         "description": "String identifying the format/type of this Resource, used to identify a compatible Handler",
+         "type": "string"
       },
       "resource_path": {
-         "type": "string",
-         "description": "Filepath or URI for locating this resource"
+         "title": "Resource Path",
+         "description": "Filepath or URI for locating this resource",
+         "type": "string"
       },
       "resource_kwargs": {
-         "type": "object",
-         "description": "Additional argument to pass to the Handler to read a Resource"
+         "title": "Resource Kwargs",
+         "description": "Additional argument to pass to the Handler to read a Resource",
+         "type": "object"
       },
       "root": {
-         "type": "string",
-         "description": "Subset of resource_path that is a local detail, not semantic."
+         "title": "Root",
+         "description": "Subset of resource_path that is a local detail, not semantic.",
+         "type": "string"
       },
       "path_semantics": {
-         "type": [
-            "string",
-            "null"
-         ],
-         "enum": [
-            "posix",
-            "windows"
-         ],
-         "description": "Rules for joining paths"
+         "description": "Rules for joining paths",
+         "allOf": [
+            {
+               "$ref": "#/definitions/PathSemantics"
+            }
+         ]
       },
       "uid": {
-         "type": "string",
-         "description": "Globally unique identifier for this Resource"
+         "title": "Uid",
+         "description": "Globally unique identifier for this Resource",
+         "type": "string"
       },
       "run_start": {
-         "type": [
-            "string",
-            "null"
-         ],
-         "description": "Globally unique ID to the run_start document this resource is associated with."
+         "title": "Run Start",
+         "description": "Globally unique ID to the run_start document this resource is associated with.",
+         "type": "string"
       }
    },
    "required": [
@@ -45,12 +47,17 @@
       "resource_path",
       "resource_kwargs",
       "root",
-      "path_semantics",
-      "uid",
-      "run_start"
+      "uid"
    ],
    "additionalProperties": false,
-   "$schema": "http://json-schema.org/draft/2020-12/schema#",
-   "description": "Document to reference a collection (e.g. file or group of files) of externally-stored data",
-   "title": "resource"
+   "definitions": {
+      "PathSemantics": {
+         "title": "PathSemantics",
+         "description": "An enumeration.",
+         "enum": [
+            "posix",
+            "windows"
+         ]
+      }
+   }
 }

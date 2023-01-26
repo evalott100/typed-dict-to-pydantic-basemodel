@@ -2,7 +2,7 @@ from typing import Dict, List, Optional, Annotated, TypedDict
 from apischema import schema
 
 
-class dataframe(TypedDict):
+class Dataframe(TypedDict):
     __root__: Annotated[
         Optional[Dict[str, List]], schema(description="A DataFrame-like object")
     ]
@@ -18,7 +18,7 @@ class DatumPage(TypedDict):
         ),
     ]
     datum_kwargs: Annotated[
-        dataframe,
+        Dataframe,
         schema(
             description="Array of arguments to pass to the Handler to retrieve one quanta of data",
         ),

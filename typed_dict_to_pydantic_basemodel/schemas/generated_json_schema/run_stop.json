@@ -1,55 +1,61 @@
 {
+   "title": "run_stop",
+   "description": "Document for the end of a run indicating the success/fail state of the run and the end time",
    "type": "object",
    "properties": {
       "run_start": {
-         "type": "string",
-         "description": "Reference back to the run_start document that this document is paired with."
+         "title": "Run Start",
+         "description": "Reference back to the run_start document that this document is paired with.",
+         "type": "string"
       },
       "reason": {
-         "type": [
-            "string",
-            "null"
-         ],
-         "description": "Long-form description of why the run ended"
+         "title": "Reason",
+         "description": "Long-form description of why the run ended",
+         "type": "string"
       },
       "time": {
-         "type": "number",
-         "description": "The time the run ended. Unix epoch"
+         "title": "Time",
+         "description": "The time the run ended. Unix epoch",
+         "type": "number"
       },
       "exit_status": {
-         "type": "string",
-         "enum": [
-            "success",
-            "abort",
-            "fail"
-         ],
-         "description": "State of the run when it ended"
+         "description": "State of the run when it ended",
+         "allOf": [
+            {
+               "$ref": "#/definitions/ExitStatus"
+            }
+         ]
       },
       "uid": {
-         "type": "string",
-         "description": "Globally unique ID for this document"
+         "title": "Uid",
+         "description": "Globally unique ID for this document",
+         "type": "string"
       },
       "num_events": {
-         "type": [
-            "object",
-            "null"
-         ],
+         "title": "Num Events",
+         "description": "Number of Events per named stream",
+         "type": "object",
          "additionalProperties": {
             "type": "integer"
-         },
-         "description": "Number of Events per named stream"
+         }
       }
    },
    "required": [
       "run_start",
-      "reason",
       "time",
       "exit_status",
-      "uid",
-      "num_events"
+      "uid"
    ],
    "additionalProperties": false,
-   "$schema": "http://json-schema.org/draft/2020-12/schema#",
-   "description": "Document for the end of a run indicating the success/fail state of the run and the end time",
-   "title": "run_stop"
+   "definitions": {
+      "ExitStatus": {
+         "title": "ExitStatus",
+         "description": "An enumeration.",
+         "enum": [
+            "success",
+            "abort",
+            "fail"
+         ]
+      }
+   }
 }

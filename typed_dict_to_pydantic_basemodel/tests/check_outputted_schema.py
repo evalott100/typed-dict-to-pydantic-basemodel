@@ -1,17 +1,23 @@
 from typed_dict_to_pydantic_basemodel.src.typeddict_to_schema import (
-    export_typedict_to_json_schema,
+    parse_dict_to_pydantic_basemodel,
 )
 
-from typed_dict_to_pydantic_basemodel.src.models.datum_page import DatumPage
-from typed_dict_to_pydantic_basemodel.src.models.datum import Datum
-from typed_dict_to_pydantic_basemodel.src.models.event_descriptor import EventDescriptor
-from typed_dict_to_pydantic_basemodel.src.models.event_page import EventPage
-from typed_dict_to_pydantic_basemodel.src.models.event import Event
-from typed_dict_to_pydantic_basemodel.src.models.resource import Resource
-from typed_dict_to_pydantic_basemodel.src.models.run_start import RunStart
-from typed_dict_to_pydantic_basemodel.src.models.run_stop import RunStop
-from typed_dict_to_pydantic_basemodel.src.models.stream_datum import StreamDatum
-from typed_dict_to_pydantic_basemodel.src.models.stream_resource import StreamResource
+from typed_dict_to_pydantic_basemodel.src.models.pydantic.datum_page import DatumPage
+from typed_dict_to_pydantic_basemodel.src.models.pydantic.datum import Datum
+from typed_dict_to_pydantic_basemodel.src.models.pydantic.event_descriptor import (
+    EventDescriptor,
+)
+from typed_dict_to_pydantic_basemodel.src.models.pydantic.event_page import EventPage
+from typed_dict_to_pydantic_basemodel.src.models.pydantic.event import Event
+from typed_dict_to_pydantic_basemodel.src.models.pydantic.resource import Resource
+from typed_dict_to_pydantic_basemodel.src.models.pydantic.run_start import RunStart
+from typed_dict_to_pydantic_basemodel.src.models.pydantic.run_stop import RunStop
+from typed_dict_to_pydantic_basemodel.src.models.pydantic.stream_datum import (
+    StreamDatum,
+)
+from typed_dict_to_pydantic_basemodel.src.models.pydantic.stream_resource import (
+    StreamResource,
+)
 import json
 from pathlib import Path
 
@@ -59,16 +65,16 @@ generated_dicts = (
     stream_datum_generated_dict,
     stream_resource_generated_dict,
 ) = (
-    export_typedict_to_json_schema(DatumPage, out_dir=SCHEMA_GENERATED_OUT_DIR),
-    export_typedict_to_json_schema(Datum, out_dir=SCHEMA_GENERATED_OUT_DIR),
-    export_typedict_to_json_schema(EventDescriptor, out_dir=SCHEMA_GENERATED_OUT_DIR),
-    export_typedict_to_json_schema(Event, out_dir=SCHEMA_GENERATED_OUT_DIR),
-    export_typedict_to_json_schema(EventPage, out_dir=SCHEMA_GENERATED_OUT_DIR),
-    export_typedict_to_json_schema(Resource, out_dir=SCHEMA_GENERATED_OUT_DIR),
-    export_typedict_to_json_schema(RunStart, out_dir=SCHEMA_GENERATED_OUT_DIR),
-    export_typedict_to_json_schema(RunStop, out_dir=SCHEMA_GENERATED_OUT_DIR),
-    export_typedict_to_json_schema(StreamDatum, out_dir=SCHEMA_GENERATED_OUT_DIR),
-    export_typedict_to_json_schema(StreamResource, out_dir=SCHEMA_GENERATED_OUT_DIR),
+    parse_dict_to_pydantic_basemodel(DatumPage, out_dir=SCHEMA_GENERATED_OUT_DIR),
+    parse_dict_to_pydantic_basemodel(Datum, out_dir=SCHEMA_GENERATED_OUT_DIR),
+    parse_dict_to_pydantic_basemodel(EventDescriptor, out_dir=SCHEMA_GENERATED_OUT_DIR),
+    parse_dict_to_pydantic_basemodel(Event, out_dir=SCHEMA_GENERATED_OUT_DIR),
+    parse_dict_to_pydantic_basemodel(EventPage, out_dir=SCHEMA_GENERATED_OUT_DIR),
+    parse_dict_to_pydantic_basemodel(Resource, out_dir=SCHEMA_GENERATED_OUT_DIR),
+    parse_dict_to_pydantic_basemodel(RunStart, out_dir=SCHEMA_GENERATED_OUT_DIR),
+    parse_dict_to_pydantic_basemodel(RunStop, out_dir=SCHEMA_GENERATED_OUT_DIR),
+    parse_dict_to_pydantic_basemodel(StreamDatum, out_dir=SCHEMA_GENERATED_OUT_DIR),
+    parse_dict_to_pydantic_basemodel(StreamResource, out_dir=SCHEMA_GENERATED_OUT_DIR),
 )
 
 
@@ -97,7 +103,7 @@ def elements_in_x_not_equal_to_elements_in_y(x: dict, y: dict, title="", parent=
 
             if x[key_x] != y[key_x]:
                 elements.append(
-                    f"\t{title}_original:{parent}[{key_x}] = {x[key_x]},\n\t{title}_generated:{parent}[{key_x}] = {y[key_x]}"
+                    f"\t{title}_original:    {parent}[{key_x}] = {x[key_x]},\n\t{title}_generated:   {parent}[{key_x}] = {y[key_x]}"
                 )
 
     return elements
