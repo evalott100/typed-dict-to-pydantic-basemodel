@@ -1,4 +1,4 @@
-from typed_dict_to_pydantic_basemodel.src.typeddict_to_basemodel import (
+from typed_dict_to_pydantic_basemodel.src.typeddict_to_schema import (
     export_typedict_to_json_schema,
 )
 
@@ -12,8 +12,6 @@ from typed_dict_to_pydantic_basemodel.src.models.run_start import RunStart
 from typed_dict_to_pydantic_basemodel.src.models.run_stop import RunStop
 from typed_dict_to_pydantic_basemodel.src.models.stream_datum import StreamDatum
 from typed_dict_to_pydantic_basemodel.src.models.stream_resource import StreamResource
-from os import listdir
-
 import json
 from pathlib import Path
 
@@ -25,7 +23,7 @@ SCHEMA_ORIGINAL_IN_DIR = Path(
     "typed_dict_to_pydantic_basemodel/schemas/original_json_schema"
 )
 
-(
+original_dicts = (
     datum_page_original_dict,
     datum_original_dict,
     event_descriptor_original_dict,
@@ -49,7 +47,7 @@ SCHEMA_ORIGINAL_IN_DIR = Path(
     json.load(Path(SCHEMA_ORIGINAL_IN_DIR / "stream_resource.json").open()),
 )
 
-(
+generated_dicts = (
     datum_page_generated_dict,
     datum_generated_dict,
     event_descriptor_generated_dict,
@@ -83,7 +81,7 @@ def elements_in_x_not_equal_to_elements_in_y(x: dict, y: dict, title="", parent=
     for key_x in x:
 
         if key_x not in y:
-            elements.append(f"{title} has no field {parent}[{key_x}]")
+            elements.append(f"\t{title} has no field {parent}[{key_x}]")
 
         elif isinstance(x[key_x], dict):
             elements += elements_in_x_not_equal_to_elements_in_y(
@@ -91,13 +89,16 @@ def elements_in_x_not_equal_to_elements_in_y(x: dict, y: dict, title="", parent=
             )
 
         else:
+            # We don't want to compare order
+            if isinstance(y[key_x], list):
+                y[key_x] = set(y[key_x])
             if isinstance(x[key_x], list):
-                if set(x[key_x]) != set(y[key_x]):
-                    elements.append(
-                        f"x{parent}[{key_x}] = {set(x[key_x])}, y[{key_x} = {set(y[key_x])}]"
-                    )
+                x[key_x] = set(y[key_x])
+
             if x[key_x] != y[key_x]:
-                elements.append(f"x[{key_x}] = {x[key_x]}, y[{key_x}] = {y[key_x]}]")
+                elements.append(
+                    f"\t{title}_original:{parent}[{key_x}] = {x[key_x]},\n\t{title}_generated:{parent}[{key_x}] = {y[key_x]}"
+                )
 
     return elements
 
@@ -131,9 +132,12 @@ missing_elements = (
     ),
 )
 
-for i in missing_elements:
-    if not i:
+for i in range(len(generated_dicts)):
+    missing_elements = elements_in_x_not_equal_to_elements_in_y(
+        original_dicts[i], generated_dicts[i]
+    )
+    if not missing_elements:
         continue
-    print(f"file {missing_elements.index(i)}")
-    for j in i:
-        print(f"\t{j}")
+    print(generated_dicts[i]["title"])
+    for j in missing_elements:
+        print(f"{j}")

@@ -1,7 +1,7 @@
 from enum import Enum
-from typing import Any, Dict, Optional, Annotated
+from typing import Any, Dict, Optional, Annotated, TypedDict
 
-from pydantic import BaseModel, Extra, Field
+from apischema import schema
 
 
 class PathSemantics(Enum):
@@ -9,42 +9,39 @@ class PathSemantics(Enum):
     windows = "windows"
 
 
-class Resource(BaseModel):
+class Resource(TypedDict):
     """Document to reference a collection (e.g. file or group of files) of externally-stored data"""
-
-    class Config:
-        extra = Extra.forbid
 
     spec: Annotated[
         str,
-        Field(
+        schema(
             description="String identifying the format/type of this Resource, used to identify a compatible Handler",
         ),
     ]
     resource_path: Annotated[
-        str, Field(description="Filepath or URI for locating this resource")
+        str, schema(description="Filepath or URI for locating this resource")
     ]
     resource_kwargs: Annotated[
         Dict[str, Any],
-        Field(
+        schema(
             description="Additional argument to pass to the Handler to read a Resource"
         ),
     ]
     root: Annotated[
         str,
-        Field(
+        schema(
             description="Subset of resource_path that is a local detail, not semantic."
         ),
     ]
     path_semantics: Annotated[
-        Optional[PathSemantics], Field(description="Rules for joining paths")
+        Optional[PathSemantics], schema(description="Rules for joining paths")
     ]
     uid: Annotated[
-        str, Field(description="Globally unique identifier for this Resource")
+        str, schema(description="Globally unique identifier for this Resource")
     ]
     run_start: Annotated[
         Optional[str],
-        Field(
+        schema(
             description="Globally unique ID to the run_start document this resource is associated with.",
         ),
     ]

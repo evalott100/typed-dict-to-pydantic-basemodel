@@ -1,29 +1,36 @@
 {
-   "title": "datum_page",
-   "description": "Page of documents to reference a quanta of externally-stored data",
    "type": "object",
    "properties": {
       "resource": {
-         "title": "Resource",
-         "description": "The UID of the Resource to which all Datums in the page belong",
-         "type": "string"
+         "type": "string",
+         "description": "The UID of the Resource to which all Datums in the page belong"
       },
       "datum_kwargs": {
-         "title": "Datum Kwargs",
-         "description": "Array of arguments to pass to the Handler to retrieve one quanta of data",
-         "allOf": [
-            {
-               "$ref": "#/definitions/dataframe"
+         "type": "object",
+         "properties": {
+            "__root__": {
+               "type": [
+                  "object",
+                  "null"
+               ],
+               "additionalProperties": {
+                  "type": "array"
+               },
+               "description": "A DataFrame-like object"
             }
-         ]
+         },
+         "required": [
+            "__root__"
+         ],
+         "additionalProperties": false,
+         "description": "Array of arguments to pass to the Handler to retrieve one quanta of data"
       },
       "datum_id": {
-         "title": "Datum Id",
-         "description": "Array unique identifiers for each Datum (akin to 'uid' for other Document types), typically formatted as '<resource>/<integer>'",
          "type": "array",
          "items": {
             "type": "string"
-         }
+         },
+         "description": "Array unique identifiers for each Datum (akin to 'uid' for other Document types), typically formatted as '<resource>/<integer>'"
       }
    },
    "required": [
@@ -32,15 +39,7 @@
       "datum_id"
    ],
    "additionalProperties": false,
-   "definitions": {
-      "dataframe": {
-         "title": "dataframe",
-         "description": "A DataFrame-like object",
-         "type": "object",
-         "additionalProperties": {
-            "type": "array",
-            "items": {}
-         }
-      }
-   }
+   "$schema": "http://json-schema.org/draft/2020-12/schema#",
+   "description": "Page of documents to reference a quanta of externally-stored data",
+   "title": "datum_page"
 }

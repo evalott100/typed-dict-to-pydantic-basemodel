@@ -1,22 +1,17 @@
 {
-   "title": "datum",
-   "description": "Document to reference a quanta of externally-stored data",
    "type": "object",
    "properties": {
       "datum_kwargs": {
-         "title": "Datum Kwargs",
-         "description": "Arguments to pass to the Handler to retrieve one quanta of data",
-         "type": "object"
+         "type": "object",
+         "description": "Arguments to pass to the Handler to retrieve one quanta of data"
       },
       "resource": {
-         "title": "Resource",
-         "description": "The UID of the Resource to which this Datum belongs",
-         "type": "string"
+         "type": "string",
+         "description": "The UID of the Resource to which this Datum belongs"
       },
       "datum_id": {
-         "title": "Datum Id",
-         "description": "Globally unique identifier for this Datum (akin to 'uid' for other Document types), typically formatted as '<resource>/<integer>'",
-         "type": "string"
+         "type": "string",
+         "description": "Globally unique identifier for this Datum (akin to 'uid' for other Document types), typically formatted as '<resource>/<integer>'"
       }
    },
    "required": [
@@ -24,5 +19,8 @@
       "resource",
       "datum_id"
    ],
-   "additionalProperties": false
+   "additionalProperties": false,
+   "$schema": "http://json-schema.org/draft/2020-12/schema#",
+   "description": "Document to reference a quanta of externally-stored data",
+   "title": "datum"
 }
