@@ -24,12 +24,13 @@
          "type": "string"
       },
       "path_semantics": {
+         "title": "Path Semantics",
          "description": "Rules for joining paths",
-         "allOf": [
-            {
-               "$ref": "#/definitions/PathSemantics"
-            }
-         ]
+         "enum": [
+            "posix",
+            "windows"
+         ],
+         "type": "string"
       },
       "uid": {
          "title": "Uid",
@@ -60,15 +61,5 @@
       "uid",
       "stream_names"
    ],
-   "additionalProperties": false,
-   "definitions": {
-      "PathSemantics": {
-         "title": "PathSemantics",
-         "description": "An enumeration.",
-         "enum": [
-            "posix",
-            "windows"
-         ]
-      }
-   }
+   "additionalProperties": false
 }

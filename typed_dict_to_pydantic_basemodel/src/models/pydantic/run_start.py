@@ -1,5 +1,4 @@
-from enum import Enum
-from typing import Any, Dict, List, Optional, Union, Annotated, TypedDict
+from typing import Any, Dict, List, Optional, Union, Annotated, TypedDict, Literal
 
 from pydantic import Field, constr
 
@@ -17,23 +16,13 @@ class DataType(TypedDict):
     __root__: Annotated[Any, Field(title="data_type")]
 
 
-class Type(Enum):
-    linked = "linked"
-    calculated = "calculated"
-    static = "static"
-
-
-class Location(Enum):
-    start = "start"
-    event = "event"
-    configuration = "configuration"
-
-
 class Calculation(TypedDict):
     callable: Annotated[
         str, Field(description="callable function to perform calculation")
     ]
+
     args: Optional[List]
+
     kwargs: Annotated[
         Optional[Dict[str, Any]], Field(description="kwargs for calcalation callable")
     ]
@@ -41,14 +30,14 @@ class Calculation(TypedDict):
 
 class Projection(TypedDict):
     type: Annotated[
-        Optional[Type],
+        Optional[Literal["linked", "calculated", "static"]],
         Field(
             description="linked: a value linked from the data set, calculated: a value that requires calculation, static:  a value defined here in the projection ",
         ),
     ]
     stream: Optional[str]
     location: Annotated[
-        Optional[Location],
+        Optional[Literal["start", "event", "configuration"]],
         Field(
             description="start comes from metadata fields in the start document, event comes from event, configuration comes from configuration fields in the event_descriptor document",
         ),

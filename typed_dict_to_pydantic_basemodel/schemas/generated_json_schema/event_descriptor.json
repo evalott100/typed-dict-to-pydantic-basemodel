@@ -57,28 +57,21 @@
    ],
    "additionalProperties": false,
    "definitions": {
-      "Dtype": {
-         "title": "Dtype",
-         "description": "An enumeration.",
-         "enum": [
-            "string",
-            "number",
-            "array",
-            "boolean",
-            "integer"
-         ]
-      },
       "DataKey": {
          "title": "DataKey",
          "type": "object",
          "properties": {
             "dtype": {
+               "title": "Dtype",
                "description": "The type of the data in the event.",
-               "allOf": [
-                  {
-                     "$ref": "#/definitions/Dtype"
-                  }
-               ]
+               "enum": [
+                  "string",
+                  "number",
+                  "array",
+                  "boolean",
+                  "integer"
+               ],
+               "type": "string"
             },
             "external": {
                "title": "External",

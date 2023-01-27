@@ -1,13 +1,6 @@
-from enum import Enum
-from typing import Any, Dict, Optional, Annotated, TypedDict
+from typing import Any, Dict, Optional, Annotated, TypedDict, Literal
 
 from pydantic import Field
-
-
-class ExitStatus(Enum):
-    success = "success"
-    abort = "abort"
-    fail = "fail"
 
 
 class RunStop(TypedDict):
@@ -24,7 +17,8 @@ class RunStop(TypedDict):
     ]
     time: Annotated[float, Field(description="The time the run ended. Unix epoch")]
     exit_status: Annotated[
-        ExitStatus, Field(description="State of the run when it ended")
+        Literal["success", "abort", "fail"],
+        Field(description="State of the run when it ended"),
     ]
     uid: Annotated[str, Field(description="Globally unique ID for this document")]
     num_events: Annotated[

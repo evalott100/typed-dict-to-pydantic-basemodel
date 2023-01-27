@@ -1,12 +1,6 @@
-from enum import Enum
-from typing import Any, Dict, Optional, Annotated, TypedDict
+from typing import Any, Dict, Optional, Annotated, TypedDict, Literal
 
 from pydantic import Field
-
-
-class PathSemantics(Enum):
-    posix = "posix"
-    windows = "windows"
 
 
 class Resource(TypedDict):
@@ -34,7 +28,8 @@ class Resource(TypedDict):
         ),
     ]
     path_semantics: Annotated[
-        Optional[PathSemantics], Field(description="Rules for joining paths")
+        Optional[Literal["posix", "windows"]],
+        Field(description="Rules for joining paths"),
     ]
     uid: Annotated[
         str, Field(description="Globally unique identifier for this Resource")

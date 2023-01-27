@@ -138,12 +138,13 @@ missing_elements = (
     ),
 )
 
-for i in range(len(generated_dicts)):
+
+for (generated,original) in zip(generated_dicts, original_dicts):
     missing_elements = elements_in_x_not_equal_to_elements_in_y(
-        original_dicts[i], generated_dicts[i]
+        original, generated
     )
     if not missing_elements:
         continue
-    print(generated_dicts[i]["title"])
-    for j in missing_elements:
-        print(f"{j}")
+    print(generated["title"])
+    for missing_element in missing_elements:
+        print(missing_element)

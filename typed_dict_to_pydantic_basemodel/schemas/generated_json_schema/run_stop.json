@@ -19,12 +19,14 @@
          "type": "number"
       },
       "exit_status": {
+         "title": "Exit Status",
          "description": "State of the run when it ended",
-         "allOf": [
-            {
-               "$ref": "#/definitions/ExitStatus"
-            }
-         ]
+         "enum": [
+            "success",
+            "abort",
+            "fail"
+         ],
+         "type": "string"
       },
       "uid": {
          "title": "Uid",
@@ -46,16 +48,5 @@
       "exit_status",
       "uid"
    ],
-   "additionalProperties": false,
-   "definitions": {
-      "ExitStatus": {
-         "title": "ExitStatus",
-         "description": "An enumeration.",
-         "enum": [
-            "success",
-            "abort",
-            "fail"
-         ]
-      }
-   }
+   "additionalProperties": false
 }

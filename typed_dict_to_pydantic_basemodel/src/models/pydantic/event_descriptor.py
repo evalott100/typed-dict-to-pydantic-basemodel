@@ -1,19 +1,13 @@
-from enum import Enum
-from typing import Any, Dict, List, Optional, Annotated, TypedDict
+from typing import Any, Dict, List, Optional, Annotated, TypedDict, Literal
 
 from pydantic import Field, constr
 
 
-class Dtype(Enum):
-    string = "string"
-    number = "number"
-    array = "array"
-    boolean = "boolean"
-    integer = "integer"
-
-
 class DataKey(TypedDict):
-    dtype: Annotated[Dtype, Field(description="The type of the data in the event.")]
+    dtype: Annotated[
+        Literal["string", "number", "array", "boolean", "integer"],
+        Field(description="The type of the data in the event."),
+    ]
 
     external: Annotated[
         Optional[constr(regex=r"^[A-Z]+:?")],
