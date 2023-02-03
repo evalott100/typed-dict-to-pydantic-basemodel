@@ -23,23 +23,9 @@
          "description": "Subset of resource_path that is a local detail, not semantic.",
          "type": "string"
       },
-      "path_semantics": {
-         "title": "Path Semantics",
-         "description": "Rules for joining paths",
-         "enum": [
-            "posix",
-            "windows"
-         ],
-         "type": "string"
-      },
       "uid": {
          "title": "Uid",
          "description": "Globally unique identifier for this Stream Resource",
-         "type": "string"
-      },
-      "run_start": {
-         "title": "Run Start",
-         "description": "Globally unique ID to the run_start document this Stream Resource is associated with.",
          "type": "string"
       },
       "stream_names": {

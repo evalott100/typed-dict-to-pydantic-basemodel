@@ -3,21 +3,12 @@ from typing import Any, Dict, List, Optional, Annotated, TypedDict, Literal
 from pydantic import Field, constr
 
 
-class DataKey(TypedDict):
-    dtype: Annotated[
-        Literal["string", "number", "array", "boolean", "integer"],
-        Field(description="The type of the data in the event."),
-    ]
-
+class DataKeyOptional(TypedDict, total=False):
     external: Annotated[
         Optional[constr(regex=r"^[A-Z]+:?")],
         Field(
             description="Where the data is stored if it is stored external to the events.",
         ),
-    ]
-    shape: Annotated[
-        List[int],
-        Field(description="The shape of the data.  Empty list indicates scalar data."),
     ]
     dims: Annotated[
         Optional[List[str]],
@@ -25,12 +16,24 @@ class DataKey(TypedDict):
             description="The names for dimensions of the data. Null or empty list if scalar data",
         ),
     ]
-    source: Annotated[
-        str, Field(description="The source (ex piece of hardware) of the data.")
-    ]
     object_name: Annotated[
         Optional[str],
         Field(description="The name of the object this key was pulled from."),
+    ]
+
+
+class DataKey(DataKeyOptional, TypedDict):
+    dtype: Annotated[
+        Literal["string", "number", "array", "boolean", "integer"],
+        Field(description="The type of the data in the event."),
+    ]
+
+    shape: Annotated[
+        List[int],
+        Field(description="The shape of the data.  Empty list indicates scalar data."),
+    ]
+    source: Annotated[
+        str, Field(description="The source (ex piece of hardware) of the data.")
     ]
 
 
@@ -42,14 +45,14 @@ class ObjectHints(TypedDict):
     __root__: Annotated[Any, Field(title="Object Hints")]
 
 
-class PerObjectHint(TypedDict):
+class PerObjectHint(TypedDict, total=False):
     fields: Annotated[
         Optional[List[str]],
         Field(description="The 'interesting' data keys for this device."),
     ]
 
 
-class Configuration(TypedDict):
+class ConfigurationOptional(TypedDict, total=False):
     data: Annotated[
         Optional[Dict[str, Any]], Field(description="The actual measurement data")
     ]
@@ -65,26 +68,11 @@ class Configuration(TypedDict):
     ]
 
 
-class EventDescriptor(TypedDict):
-    """Document to describe the data captured in the associated event documents"""
+class Configuration(ConfigurationOptional, TypedDict):
+    ...
 
-    data_keys: Annotated[
-        Dict[str, DataKey],
-        Field(
-            description="This describes the data in the Event Documents.",
-            title="data_keys",
-        ),
-    ]
-    uid: Annotated[
-        str,
-        Field(description="Globally unique ID for this event descriptor.", title="uid"),
-    ]
-    run_start: Annotated[
-        str, Field(description="Globally unique ID of this run's 'start' document.")
-    ]
-    time: Annotated[
-        float, Field(description="Creation time of the document as unix epoch time.")
-    ]
+
+class EventDescriptorOptional(TypedDict, total=False):
     hints: Optional[ObjectHints]
     object_keys: Annotated[
         Optional[Dict[str, Any]],
@@ -103,4 +91,26 @@ class EventDescriptor(TypedDict):
         Field(
             description="Readings of configurational fields necessary for interpreting data in the Events.",
         ),
+    ]
+
+
+class EventDescriptor(EventDescriptorOptional, TypedDict):
+    """Document to describe the data captured in the associated event documents"""
+
+    data_keys: Annotated[
+        Dict[str, DataKey],
+        Field(
+            description="This describes the data in the Event Documents.",
+            title="data_keys",
+        ),
+    ]
+    uid: Annotated[
+        str,
+        Field(description="Globally unique ID for this event descriptor.", title="uid"),
+    ]
+    run_start: Annotated[
+        str, Field(description="Globally unique ID of this run's 'start' document.")
+    ]
+    time: Annotated[
+        float, Field(description="Creation time of the document as unix epoch time.")
     ]

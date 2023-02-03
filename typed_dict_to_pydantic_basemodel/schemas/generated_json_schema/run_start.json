@@ -38,16 +38,6 @@
          "description": "Scan ID number, not globally unique",
          "type": "integer"
       },
-      "time": {
-         "title": "Time",
-         "description": "Time the run started.  Unix epoch time",
-         "type": "number"
-      },
-      "uid": {
-         "title": "Uid",
-         "description": "Globally unique ID for this run",
-         "type": "string"
-      },
       "group": {
          "title": "Group",
          "description": "Unix group to associate this data with",
@@ -73,12 +63,22 @@
                "$ref": "#/definitions/Hints"
             }
          ]
+      },
+      "time": {
+         "title": "Time",
+         "description": "Time the run started.  Unix epoch time",
+         "type": "number"
+      },
+      "uid": {
+         "title": "Uid",
+         "description": "Globally unique ID for this run",
+         "type": "string"
       }
    },
    "required": [
+      "projections",
       "time",
-      "uid",
-      "projections"
+      "uid"
    ],
    "additionalProperties": false,
    "definitions": {
@@ -86,11 +86,6 @@
          "title": "Calculation",
          "type": "object",
          "properties": {
-            "callable": {
-               "title": "Callable",
-               "description": "callable function to perform calculation",
-               "type": "string"
-            },
             "args": {
                "title": "Args",
                "type": "array",
@@ -100,11 +95,15 @@
                "title": "Kwargs",
                "description": "kwargs for calcalation callable",
                "type": "object"
+            },
+            "callable": {
+               "title": "Callable",
+               "description": "callable function to perform calculation",
+               "type": "string"
             }
          },
          "required": [
-            "callable",
-            "args"
+            "callable"
          ],
          "additionalProperties": false
       },
@@ -162,12 +161,6 @@
                "description": "value explicitely defined in the projection when type==static."
             }
          },
-         "required": [
-            "stream",
-            "field",
-            "config_index",
-            "config_device"
-         ],
          "additionalProperties": false
       },
       "Projections": {

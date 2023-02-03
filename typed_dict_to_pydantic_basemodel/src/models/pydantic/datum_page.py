@@ -3,10 +3,14 @@ from typing import Dict, List, Optional, Annotated, TypedDict
 from pydantic import Field
 
 
-class Dataframe(TypedDict):
+class DataframeOptional(TypedDict, total=False):
     __root__: Annotated[
         Optional[Dict[str, List]], Field(description="A DataFrame-like object")
     ]
+
+
+class Dataframe(DataframeOptional, TypedDict):
+    ...
 
 
 class DatumPage(TypedDict):

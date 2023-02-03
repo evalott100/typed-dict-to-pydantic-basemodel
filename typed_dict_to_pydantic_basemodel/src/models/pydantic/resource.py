@@ -3,7 +3,20 @@ from typing import Any, Dict, Optional, Annotated, TypedDict, Literal
 from pydantic import Field
 
 
-class Resource(TypedDict):
+class ResourceOptional(TypedDict, total=False):
+    path_semantics: Annotated[
+        Optional[Literal["posix", "windows"]],
+        Field(description="Rules for joining paths"),
+    ]
+    run_start: Annotated[
+        Optional[str],
+        Field(
+            description="Globally unique ID to the run_start document this resource is associated with.",
+        ),
+    ]
+
+
+class Resource(ResourceOptional, TypedDict):
     """Document to reference a collection (e.g. file or group of files) of externally-stored data"""
 
     spec: Annotated[
@@ -27,16 +40,6 @@ class Resource(TypedDict):
             description="Subset of resource_path that is a local detail, not semantic."
         ),
     ]
-    path_semantics: Annotated[
-        Optional[Literal["posix", "windows"]],
-        Field(description="Rules for joining paths"),
-    ]
     uid: Annotated[
         str, Field(description="Globally unique identifier for this Resource")
-    ]
-    run_start: Annotated[
-        Optional[str],
-        Field(
-            description="Globally unique ID to the run_start document this resource is associated with.",
-        ),
     ]

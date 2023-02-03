@@ -3,6 +3,20 @@
    "description": "Document to reference a collection (e.g. file or group of files) of externally-stored data",
    "type": "object",
    "properties": {
+      "path_semantics": {
+         "title": "Path Semantics",
+         "description": "Rules for joining paths",
+         "enum": [
+            "posix",
+            "windows"
+         ],
+         "type": "string"
+      },
+      "run_start": {
+         "title": "Run Start",
+         "description": "Globally unique ID to the run_start document this resource is associated with.",
+         "type": "string"
+      },
       "spec": {
          "title": "Spec",
          "description": "String identifying the format/type of this Resource, used to identify a compatible Handler",
@@ -23,23 +37,9 @@
          "description": "Subset of resource_path that is a local detail, not semantic.",
          "type": "string"
       },
-      "path_semantics": {
-         "title": "Path Semantics",
-         "description": "Rules for joining paths",
-         "enum": [
-            "posix",
-            "windows"
-         ],
-         "type": "string"
-      },
       "uid": {
          "title": "Uid",
          "description": "Globally unique identifier for this Resource",
-         "type": "string"
-      },
-      "run_start": {
-         "title": "Run Start",
-         "description": "Globally unique ID to the run_start document this resource is associated with.",
          "type": "string"
       }
    },

@@ -3,6 +3,15 @@
    "description": "Page of documents to record a quanta of collected data",
    "type": "object",
    "properties": {
+      "filled": {
+         "title": "Filled",
+         "description": "Mapping each of the keys of externally-stored data to an array containing the boolean False, indicating that the data has not been loaded, or to foreign keys (moved here from 'data' when the data was loaded)",
+         "allOf": [
+            {
+               "$ref": "#/definitions/DataframeForFilled"
+            }
+         ]
+      },
       "descriptor": {
          "title": "Descriptor",
          "description": "The UID of the EventDescriptor to which all of the Events in this page belong",
@@ -23,15 +32,6 @@
          "allOf": [
             {
                "$ref": "#/definitions/Dataframe"
-            }
-         ]
-      },
-      "filled": {
-         "title": "Filled",
-         "description": "Mapping each of the keys of externally-stored data to an array containing the boolean False, indicating that the data has not been loaded, or to foreign keys (moved here from 'data' when the data was loaded)",
-         "allOf": [
-            {
-               "$ref": "#/definitions/DataframeForFilled"
             }
          ]
       },
@@ -70,13 +70,13 @@
    ],
    "additionalProperties": false,
    "definitions": {
-      "Dataframe": {
-         "title": "Dataframe",
+      "DataframeForFilled": {
+         "title": "DataframeForFilled",
          "type": "object",
          "additionalProperties": false
       },
-      "DataframeForFilled": {
-         "title": "DataframeForFilled",
+      "Dataframe": {
+         "title": "Dataframe",
          "type": "object",
          "additionalProperties": false
       }

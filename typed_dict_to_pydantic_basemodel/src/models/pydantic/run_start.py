@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Union, Annotated, TypedDict, Liter
 from pydantic import Field, constr
 
 
-class Hints(TypedDict):
+class Hints(TypedDict, total=False):
     dimensions: Annotated[
         Optional[List[List[Union[List[str], str]]]],
         Field(
@@ -16,11 +16,7 @@ class DataType(TypedDict):
     __root__: Annotated[Any, Field(title="data_type")]
 
 
-class Calculation(TypedDict):
-    callable: Annotated[
-        str, Field(description="callable function to perform calculation")
-    ]
-
+class CalculationOptional(TypedDict, total=False):
     args: Optional[List]
 
     kwargs: Annotated[
@@ -28,7 +24,13 @@ class Calculation(TypedDict):
     ]
 
 
-class Projection(TypedDict):
+class Calculation(CalculationOptional, TypedDict):
+    callable: Annotated[
+        str, Field(description="callable function to perform calculation")
+    ]
+
+
+class ProjectionOptional(TypedDict, total=False):
     type: Annotated[
         Optional[Literal["linked", "calculated", "static"]],
         Field(
@@ -60,8 +62,15 @@ class Projection(TypedDict):
     ]
 
 
-class Projections(TypedDict):
+class Projection(ProjectionOptional, TypedDict):
+    ...
+
+
+class ProjectionsOptional(TypedDict, total=False):
     name: Annotated[Optional[str], Field(description="The name of the projection")]
+
+
+class Projections(ProjectionsOptional, TypedDict):
     version: Annotated[
         str,
         Field(
@@ -74,9 +83,7 @@ class Projections(TypedDict):
     projection: Dict[constr(regex=r"."), Projection]
 
 
-class RunStart(TypedDict):
-    """Document created at the start of run.  Provides a seach target and later documents link to it"""
-
+class RunStartOptional(TypedDict, total=False):
     data_session: Annotated[
         Optional[str],
         Field(
@@ -101,8 +108,6 @@ class RunStart(TypedDict):
     scan_id: Annotated[
         Optional[int], Field(description="Scan ID number, not globally unique")
     ]
-    time: Annotated[float, Field(description="Time the run started.  Unix epoch time")]
-    uid: Annotated[str, Field(description="Globally unique ID for this run")]
     group: Annotated[
         Optional[str], Field(description="Unix group to associate this data with")
     ]
@@ -111,3 +116,10 @@ class RunStart(TypedDict):
     ]
     projections: Optional[List[Projections]]
     hints: Annotated[Optional[Hints], Field(description="Start-level hints")]
+
+
+class RunStart(RunStartOptional, TypedDict):
+    """Document created at the start of run.  Provides a seach target and later documents link to it"""
+
+    time: Annotated[float, Field(description="Time the run started.  Unix epoch time")]
+    uid: Annotated[str, Field(description="Globally unique ID for this run")]

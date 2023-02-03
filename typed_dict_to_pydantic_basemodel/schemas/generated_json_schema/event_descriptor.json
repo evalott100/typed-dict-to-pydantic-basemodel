@@ -3,6 +3,27 @@
    "description": "Document to describe the data captured in the associated event documents",
    "type": "object",
    "properties": {
+      "hints": {
+         "$ref": "#/definitions/ObjectHints"
+      },
+      "object_keys": {
+         "title": "Object Keys",
+         "description": "Maps a Device/Signal name to the names of the entries it produces in data_keys.",
+         "type": "object"
+      },
+      "name": {
+         "title": "Name",
+         "description": "A human-friendly name for this data stream, such as 'primary' or 'baseline'.",
+         "type": "string"
+      },
+      "configuration": {
+         "title": "Configuration",
+         "description": "Readings of configurational fields necessary for interpreting data in the Events.",
+         "type": "object",
+         "additionalProperties": {
+            "$ref": "#/definitions/Configuration"
+         }
+      },
       "data_keys": {
          "title": "data_keys",
          "description": "This describes the data in the Event Documents.",
@@ -25,42 +46,44 @@
          "title": "Time",
          "description": "Creation time of the document as unix epoch time.",
          "type": "number"
-      },
-      "hints": {
-         "$ref": "#/definitions/ObjectHints"
-      },
-      "object_keys": {
-         "title": "Object Keys",
-         "description": "Maps a Device/Signal name to the names of the entries it produces in data_keys.",
-         "type": "object"
-      },
-      "name": {
-         "title": "Name",
-         "description": "A human-friendly name for this data stream, such as 'primary' or 'baseline'.",
-         "type": "string"
-      },
-      "configuration": {
-         "title": "Configuration",
-         "description": "Readings of configurational fields necessary for interpreting data in the Events.",
-         "type": "object",
-         "additionalProperties": {
-            "$ref": "#/definitions/Configuration"
-         }
       }
    },
    "required": [
+      "hints",
       "data_keys",
       "uid",
       "run_start",
-      "time",
-      "hints"
+      "time"
    ],
    "additionalProperties": false,
    "definitions": {
+      "ObjectHints": {
+         "title": "ObjectHints",
+         "additionalProperties": false
+      },
       "DataKey": {
          "title": "DataKey",
          "type": "object",
          "properties": {
+            "external": {
+               "title": "External",
+               "description": "Where the data is stored if it is stored external to the events.",
+               "pattern": "^[A-Z]+:?",
+               "type": "string"
+            },
+            "dims": {
+               "title": "Dims",
+               "description": "The names for dimensions of the data. Null or empty list if scalar data",
+               "type": "array",
+               "items": {
+                  "type": "string"
+               }
+            },
+            "object_name": {
+               "title": "Object Name",
+               "description": "The name of the object this key was pulled from.",
+               "type": "string"
+            },
             "dtype": {
                "title": "Dtype",
                "description": "The type of the data in the event.",
@@ -73,12 +96,6 @@
                ],
                "type": "string"
             },
-            "external": {
-               "title": "External",
-               "description": "Where the data is stored if it is stored external to the events.",
-               "pattern": "^[A-Z]+:?",
-               "type": "string"
-            },
             "shape": {
                "title": "Shape",
                "description": "The shape of the data.  Empty list indicates scalar data.",
@@ -87,22 +104,9 @@
                   "type": "integer"
                }
             },
-            "dims": {
-               "title": "Dims",
-               "description": "The names for dimensions of the data. Null or empty list if scalar data",
-               "type": "array",
-               "items": {
-                  "type": "string"
-               }
-            },
             "source": {
                "title": "Source",
                "description": "The source (ex piece of hardware) of the data.",
-               "type": "string"
-            },
-            "object_name": {
-               "title": "Object Name",
-               "description": "The name of the object this key was pulled from.",
                "type": "string"
             }
          },
@@ -111,10 +115,6 @@
             "shape",
             "source"
          ],
-         "additionalProperties": false
-      },
-      "ObjectHints": {
-         "title": "ObjectHints",
          "additionalProperties": false
       },
       "Configuration": {

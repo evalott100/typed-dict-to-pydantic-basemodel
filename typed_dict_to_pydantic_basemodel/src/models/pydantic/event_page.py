@@ -3,15 +3,24 @@ from typing import Dict, List, Optional, Union, Annotated, TypedDict
 from pydantic import Field
 
 
-class Dataframe(TypedDict):
+class Dataframe(TypedDict, total=False):
     __root__: Optional[Dict[str, List]]
 
 
-class DataframeForFilled(TypedDict):
+class DataframeForFilled(TypedDict, total=False):
     __root__: Optional[Dict[str, List[Union[bool, str]]]]
 
 
-class EventPage(TypedDict):
+class EventPageOptional(TypedDict, total=False):
+    filled: Annotated[
+        Optional[DataframeForFilled],
+        Field(
+            description="Mapping each of the keys of externally-stored data to an array containing the boolean False, indicating that the data has not been loaded, or to foreign keys (moved here from 'data' when the data was loaded)",
+        ),
+    ]
+
+
+class EventPage(EventPageOptional, TypedDict):
     """Page of documents to record a quanta of collected data"""
 
     descriptor: Annotated[
@@ -24,12 +33,6 @@ class EventPage(TypedDict):
     timestamps: Annotated[
         Dataframe,
         Field(description="The timestamps of the individual measurement data"),
-    ]
-    filled: Annotated[
-        Optional[DataframeForFilled],
-        Field(
-            description="Mapping each of the keys of externally-stored data to an array containing the boolean False, indicating that the data has not been loaded, or to foreign keys (moved here from 'data' when the data was loaded)",
-        ),
     ]
     seq_num: Annotated[
         List[int],

@@ -3,19 +3,22 @@ from typing import Any, Dict, Optional, Union, Annotated, TypedDict
 from pydantic import Field
 
 
-class Event(TypedDict):
+class EventOptional(TypedDict, total=False):
+    filled: Annotated[
+        Optional[Dict[str, Union[bool, str]]],
+        Field(
+            description="Mapping each of the keys of externally-stored data to the boolean False, indicating that the data has not been loaded, or to foreign keys (moved here from 'data' when the data was loaded)",
+        ),
+    ]
+
+
+class Event(EventOptional, TypedDict):
     """Document to record a quanta of collected data"""
 
     data: Annotated[Dict[str, Any], Field(description="The actual measurement data")]
     timestamps: Annotated[
         Dict[str, Any],
         Field(description="The timestamps of the individual measurement data"),
-    ]
-    filled: Annotated[
-        Optional[Dict[str, Union[bool, str]]],
-        Field(
-            description="Mapping each of the keys of externally-stored data to the boolean False, indicating that the data has not been loaded, or to foreign keys (moved here from 'data' when the data was loaded)",
-        ),
     ]
     descriptor: Annotated[
         str, Field(description="UID of the EventDescriptor to which this Event belongs")
