@@ -29,6 +29,36 @@ SCHEMA_ORIGINAL_IN_DIR = Path(
     "typed_dict_to_pydantic_basemodel/schemas/original_json_schema"
 )
 
+# mypy passes, all values present, and one optional
+resource: Resource = {
+    "spec": "spec_val",
+    "resource_path": "resource_path_val",
+    "resource_kwargs": {},
+    "root": "root_val",
+    "uid": "uid_val",
+    "run_start": "optional_val",
+}
+
+# mypy fails, no required "spec" value
+resource: Resource = {
+    "resource_path": "resource_path_val",
+    "resource_kwargs": {},
+    "root": "root_val",
+    "uid": "uid_val",
+    "run_start": "optional_val",
+}
+
+# mpyp fails, foo isn't in the typedict
+resource: Resource = {
+    "foo": "bar",
+    "spec": "spec_val",
+    "resource_path": "resource_path_val",
+    "resource_kwargs": {},
+    "root": "root_val",
+    "uid": "uid_val",
+    "run_start": "optional_val",
+}
+
 original_dicts = (
     datum_page_original_dict,
     datum_original_dict,
@@ -78,6 +108,7 @@ generated_dicts = (
 )
 
 
+# Silly test to see how well the generated typedicts match the original
 def elements_in_x_not_equal_to_elements_in_y(x: dict, y: dict, title="", parent=""):
 
     if not title:
@@ -139,10 +170,8 @@ missing_elements = (
 )
 
 
-for (generated,original) in zip(generated_dicts, original_dicts):
-    missing_elements = elements_in_x_not_equal_to_elements_in_y(
-        original, generated
-    )
+for (generated, original) in zip(generated_dicts, original_dicts):
+    missing_elements = elements_in_x_not_equal_to_elements_in_y(original, generated)
     if not missing_elements:
         continue
     print(generated["title"])

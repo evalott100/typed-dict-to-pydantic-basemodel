@@ -16,7 +16,7 @@ class StreamResourceOptional(TypedDict, total=False):
     ]
 
 
-class StreamResource(TypedDict):
+class StreamResource(StreamResourceOptional, TypedDict):
     """Document to reference a collection (e.g. file or group of files) of externally-stored data streams"""
 
     spec: Annotated[
