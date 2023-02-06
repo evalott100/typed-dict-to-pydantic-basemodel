@@ -30,7 +30,7 @@ SCHEMA_ORIGINAL_IN_DIR = Path(
 )
 
 # mypy passes, all values present, and one optional
-resource: Resource = {
+resource0: Resource = {
     "spec": "spec_val",
     "resource_path": "resource_path_val",
     "resource_kwargs": {},
@@ -40,7 +40,7 @@ resource: Resource = {
 }
 
 # mypy fails, no required "spec" value
-resource: Resource = {
+resource1: Resource = {
     "resource_path": "resource_path_val",
     "resource_kwargs": {},
     "root": "root_val",
@@ -49,7 +49,7 @@ resource: Resource = {
 }
 
 # mpyp fails, foo isn't in the typedict
-resource: Resource = {
+resource2: Resource = {
     "foo": "bar",
     "spec": "spec_val",
     "resource_path": "resource_path_val",
@@ -57,6 +57,15 @@ resource: Resource = {
     "root": "root_val",
     "uid": "uid_val",
     "run_start": "optional_val",
+}
+
+# mpyp fails, resource_kwargs is the wrong type
+resource3: Resource = {
+    "spec": "spec_val",
+    "resource_path": "resource_path_val",
+    "resource_kwargs": 5,
+    "root": "root_val",
+    "uid": "uid_val",
 }
 
 original_dicts = (
