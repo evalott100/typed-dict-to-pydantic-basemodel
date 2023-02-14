@@ -3,11 +3,6 @@
    "description": "Document to reference a quanta of externally-stored data",
    "type": "object",
    "properties": {
-      "datum_kwargs": {
-         "title": "Datum Kwargs",
-         "description": "Arguments to pass to the Handler to retrieve one quanta of data",
-         "type": "object"
-      },
       "resource": {
          "title": "Resource",
          "description": "The UID of the Resource to which this Datum belongs",
@@ -20,7 +15,6 @@
       }
    },
    "required": [
-      "datum_kwargs",
       "resource",
       "datum_id"
    ],

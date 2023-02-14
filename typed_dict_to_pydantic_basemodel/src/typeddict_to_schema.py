@@ -19,6 +19,7 @@ def parse_dict_to_pydantic_basemodel(
 ) -> Type[BaseModel]:
     annotations = {}
 
+    print(typed_dict.__annotations__)
     for name, field in typed_dict.__annotations__.items():
         if isinstance(field, _TypedDictMeta):
             annotations[name] = (parse_dict_to_pydantic_basemodel(field), ...)

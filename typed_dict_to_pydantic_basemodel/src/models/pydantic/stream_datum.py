@@ -1,4 +1,4 @@
-from typing import Any, Dict, Annotated, TypedDict
+from typing import Any, Dict, Annotated, TypedDict, List
 
 from pydantic import Field
 
@@ -6,6 +6,21 @@ from pydantic import Field
 class StreamDatum(TypedDict):
     """Document to reference a quanta of an externally-stored stream of data."""
 
+    data_keys: Annotated[
+        List[str], Field(description="List of keys pointed to in Descriptor.")
+    ]
+    seq_nums: Annotated[
+        Dict[str, int],
+        Field(
+            description="A slice object showing the Event numbers this StreamDatum corresponds to"
+        ),
+    ]
+    indices: Annotated[
+        Dict[str, int],
+        Field(
+            description="A slice object passed to the StreamResource handler so it can hand back data and timestamps"
+        ),
+    ]
     datum_kwargs: Annotated[
         Dict[str, Any],
         Field(
@@ -20,12 +35,6 @@ class StreamDatum(TypedDict):
         str,
         Field(
             description="Globally unique identifier for this Datum. A suggested formatting being '<stream_resource>/<stream_name>/<block_id>",
-        ),
-    ]
-    stream_name: Annotated[
-        str,
-        Field(
-            description="The name of the stream that this Datum is providing a block of.",
         ),
     ]
     block_idx: Annotated[
