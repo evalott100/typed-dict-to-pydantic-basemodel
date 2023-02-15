@@ -2,20 +2,20 @@ from pathlib import Path
 import re
 import json
 from pydantic import create_model, BaseModel, Extra
-from typing import Type, _TypedDictMeta
-from apischema.json_schema import deserialization_schema
-from apischema.utils import to_snake_case
+from typing import Type, _TypedDictMeta, Optional
 
 
 # Config for generated BaseModel
 class Config(BaseModel.Config):
     extra = Extra.forbid
-    alias_generator = lambda x: to_snake_case(x).lower()
+
+    # Alias in snake case
+    alias_generator = lambda x: re.sub(r"(?<!^)(?=[A-Z])", "_", x).lower()
 
 
 # From https://github.com/pydantic/pydantic/issues/760#issuecomment-589708485
 def parse_dict_to_pydantic_basemodel(
-    typed_dict: _TypedDictMeta, out_dir: Path | None = None
+    typed_dict: _TypedDictMeta, out_dir: Optional[Path] = None
 ) -> Type[BaseModel]:
     annotations = {}
 
@@ -32,41 +32,13 @@ def parse_dict_to_pydantic_basemodel(
     model.__doc__ = typed_dict.__doc__
 
     # title goes to camelcase
-    model.__name__ = to_snake_case(typed_dict.__name__).lower()
-    model = model.schema()
+    model.__name__ = Config.alias_generator(typed_dict.__name__).lower()
+    model_schema = model.schema()
+
+    model_schema["description"] = typed_dict.__doc__
 
     if out_dir:
-        with open(out_dir / f'{model["title"]}.json', "w+") as f:
-            json.dump(model, f, indent=3)
+        with open(out_dir / f'{model_schema["title"]}.json', "w+") as f:
+            json.dump(model_schema, f, indent=3)
 
-    return model
-
-
-# From https://github.com/pydantic/pydantic/issues/760#issuecomment-589708485
-def parse_dict_to_apischema(typed_dict: _TypedDictMeta) -> dict:
-    model = deserialization_schema(typed_dict)
-
-    # Docstring is used as the description field.
-    model["description"] = typed_dict.__doc__
-
-    # Still deciding on title going to snake case
-    # model["title"] = to_snake_case(typed_dict.__name__).lower()
-    return model
-
-
-def export_typedict_to_json_schema(
-    typed_dict: _TypedDictMeta, out_dir: Path | None = None
-):
-    model = parse_dict_to_apischema(typed_dict)
-    model["description"] = typed_dict.__doc__
-
-    # Still deciding on title going to snake case
-    # model["title"] = to_snake_case(model["title"]).lower()
-
-    # Use the docstring of the TypedDict as the json schema description.
-
-    if out_dir:
-        with open(out_dir / f'{model["title"]}.json', "w+") as f:
-            json.dump(model, f, indent=3)
-
-    return dict(model)
+    return model_schema
